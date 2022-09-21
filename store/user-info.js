@@ -25,7 +25,7 @@ export const actions = {
 
     async createInfo({  }, payload) {
         console.log(payload)
-        const res = await this.$axios.post('/user-info', payload) 
-        return res;
+        // const res = await this.$axios.post('/user-info', payload) 
+        // return res;
     }
 };

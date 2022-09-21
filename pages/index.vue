@@ -8,8 +8,8 @@ export default {
     }
   },
   mounted() {
-    this.findFields();
     this.findMany();
+    this.findFields();
   },
   computed: {
     ...mapState("user-info", ["info"]),
@@ -20,6 +20,10 @@ export default {
     async findMany() {
       try {
         const res = await this.$store.dispatch("user-info/getInfo")
+        // console.log(res)
+        // res.data.forEach(r => this.userInfo[r.userFieldId] = r.value)   
+        const mapped = res.data.map((r) => this.userInfo[r.userFieldId] = r.value);
+        console.log(mapped)
       } catch (err) {
         console.log(err.response)
       }
@@ -27,16 +31,16 @@ export default {
     async findFields() {
       try {
         const res = await this.$store.dispatch("user-field/getFields")
-        console.log(res)
       } catch (err) {
         console.log(err.response)
       }
     },
-    fieldInfo(fieldID) {
-      return this.info.filter(
-        (val) =>
-          val.userFieldId === fieldID
-      )
+    async createInfo() {
+      try {
+        const res = await this.$store.dispatch("user-info/createInfo", this.userInfo)
+      } catch (err) {
+        console.log(err.response)
+      }
     }
   }
 }
@@ -52,8 +56,12 @@ export default {
             <v-row>
               <v-col cols="12" sm="6" md="4" v-for="field in fields" :key="field.id">
                 <v-text-field :label="field.fldname" outlined v-model="userInfo[field.id]"></v-text-field>
+                <!-- {{ userInfo[field.id] }} -->
               </v-col>
             </v-row>
+            <v-btn color="primary" @click="createInfo()">
+              Primary
+            </v-btn>
           </v-container>
         </v-form>
       </v-card>
