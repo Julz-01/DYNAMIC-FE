@@ -23,9 +23,26 @@ export const actions = {
         return res;
     },
 
-    async createInfo({  }, payload) {
-        console.log(payload)
-        // const res = await this.$axios.post('/user-info', payload) 
+    async createInfo({ }, payload) {
+        // const mapped = [];
+        // payload.forEach((value, userFieldId) => {
+        //     if (value !== '') {
+        //         mapped.push({ userId: 1, userFieldId, value })
+        //     }
+        // });
+
+        // console.log(mapped);
+        // const res = await this.$axios.post('/user-info', { userInfo: mapped })
         // return res;
+
+        const mapped = [];
+        payload.userInfo.forEach((value, userFieldId) => {
+            if (value !== '') {
+                mapped.push({ userId: payload.userId, userFieldId, value })
+            }
+        })
+        console.log(mapped);
+        const res = await this.$axios.post('/user-info', { userInfo: mapped })
+        return res;
     }
 };

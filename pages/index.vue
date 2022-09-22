@@ -4,12 +4,11 @@ export default {
   name: 'IndexPage',
   data() {
     return {
-      userInfo: []
+      userData: []
     }
   },
   mounted() {
     this.findMany();
-    this.findFields();
   },
   computed: {
     ...mapState("user-info", ["info"]),
@@ -21,9 +20,12 @@ export default {
       try {
         const res = await this.$store.dispatch("user-info/getInfo")
         // console.log(res)
-        // res.data.forEach(r => this.userInfo[r.userFieldId] = r.value)   
-        const mapped = res.data.map((r) => this.userInfo[r.userFieldId] = r.value);
-        console.log(mapped)
+        // res.data.forEach(r => this.userData[r.userFieldId] = r.value)   
+        if (res.status == 200) {
+          this.findFields();
+          const mapped = res.data.map((r) => this.userData[r.userFieldId] = r.value);
+          console.log(mapped)
+        }
       } catch (err) {
         console.log(err.response)
       }
@@ -37,7 +39,8 @@ export default {
     },
     async createInfo() {
       try {
-        const res = await this.$store.dispatch("user-info/createInfo", this.userInfo)
+        const res = await this.$store.dispatch("user-info/createInfo", { userInfo: this.userData, userId: 1 })
+        // console.log(res)
       } catch (err) {
         console.log(err.response)
       }
@@ -55,8 +58,8 @@ export default {
           <v-container>
             <v-row>
               <v-col cols="12" sm="6" md="4" v-for="field in fields" :key="field.id">
-                <v-text-field :label="field.fldname" outlined v-model="userInfo[field.id]"></v-text-field>
-                <!-- {{ userInfo[field.id] }} -->
+                <v-text-field :label="field.fldname" outlined v-model="userData[field.id]"></v-text-field>
+                <!-- {{ userData[field.id] }} -->
               </v-col>
             </v-row>
             <v-btn color="primary" @click="createInfo()">
