@@ -7,7 +7,7 @@ export default {
       userData: []
     }
   },
-  mounted() {
+  async fetch() {
     this.findMany();
   },
   computed: {
@@ -22,9 +22,9 @@ export default {
         // console.log(res)
         // res.data.forEach(r => this.userData[r.userFieldId] = r.value)   
         if (res.status == 200) {
-          this.findFields();
           const mapped = res.data.map((r) => this.userData[r.userFieldId] = r.value);
           console.log(mapped)
+          this.findFields();
         }
       } catch (err) {
         console.log(err.response)
@@ -40,6 +40,9 @@ export default {
     async createInfo() {
       try {
         const res = await this.$store.dispatch("user-info/createInfo", { userInfo: this.userData, userId: 1 })
+        if (res.status === 201) {
+          this.$toast.success("Saved!");
+        }
         // console.log(res)
       } catch (err) {
         console.log(err.response)
@@ -63,7 +66,7 @@ export default {
               </v-col>
             </v-row>
             <v-btn color="primary" @click="createInfo()">
-              Primary
+              SAVE
             </v-btn>
           </v-container>
         </v-form>
