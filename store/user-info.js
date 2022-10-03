@@ -44,5 +44,18 @@ export const actions = {
         console.log(mapped);
         const res = await this.$axios.post('/user-info', { userInfo: mapped })
         return res;
+    },
+
+    updateInfo({ }, payload) {
+        const mapped = [];
+        payload.userInfo.forEach((value, userFieldId) => {
+            if (value !== '') {
+                mapped.push({ userId: payload.userId, userFieldId, value })
+            }
+        })
+        console.log(payload);
+
+        const res = this.$axios.patch('/user-info', { userInfo: mapped })
+        return res;
     }
 };
